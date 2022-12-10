@@ -1,0 +1,65 @@
+<%- include('layout/header') %>
+<body>
+  <style>
+    body {
+      background: #e35869;
+      font-family: "Rubik", sans-serif;
+    }
+  </style>
+  <!-- partial:index.partial.html -->
+  <div class="login-form">
+    <form onsubmit="submitForm(event)">
+      <h1>Login</h1>
+      <div class="content">
+        <div class="input-field">
+          <input
+            type="email"
+            placeholder="Email"
+            autocomplete="nope"
+            name="email"
+          />
+        </div>
+        <div class="input-field">
+          <input
+            type="password"
+            placeholder="Password"
+            autocomplete="new-password"
+            name="password"
+          />
+        </div>
+        <a href="#" class="link">Forgot Your Password?</a>
+      </div>
+      <div class="action">
+        <button>Register</button>
+        <button type="submit">Sign in</button>
+      </div>
+    </form>
+  </div>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"
+    integrity="sha512-zJYu9ICC+mWF3+dJ4QC34N9RA0OVS1XtPbnf6oXlvGrLGNB8egsEzu/5wgG90I61hOOKvcywoLzwNmPqGAdATA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"
+    integrity="sha512-wT7uPE7tOP6w4o28u1DN775jYjHQApdBnib5Pho4RB0Pgd9y7eSkAV1BTqQydupYDB9GBhTcQQzyNMPMV3cAew=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+  <script>
+    function submitForm(event) {
+      event.preventDefault();
+      const formData = new FormData();
+      formData.append("email", document.forms[0].email.value);
+      formData.append("password", document.forms[0].password.value);
+      axios.post("/api/auth", formData).then((res) => {
+        if (res.data?.token)
+          Cookies.set("Authorization", `bearar ${res.data.token}`);
+        window.location.href = "http://localhost:3000/todo";
+      });
+    }
+  </script>
+  <!-- partial -->
+</body>
+<%- include('layout/footer') %>

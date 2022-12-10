@@ -1,0 +1,210 @@
+<%- include('layout/header') %>
+<body>
+  <style>
+    body {
+      padding: 10px 30px;
+    }
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    .btndark {
+      padding: 4px 6px;
+      background-color: rgb(185, 233, 217);
+      color: rgb(4, 218, 146);
+      border: 1px solid rgb(4, 218, 146);
+      outline: none;
+      cursor: pointer;
+    }
+  </style>
+  <!-- Modal -->
+  <!-- Button trigger modal -->
+  <button
+    type="button"
+    class="btndark"
+    data-bs-toggle="modal"
+    data-bs-target="#staticBackdrop"
+  >
+    Add Form
+  </button>
+
+  <!--Insert Modal -->
+  <div
+    class="modal fade"
+    id="staticBackdrop"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form action="/api/store" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label"
+                >Full Name</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="exampleFormControlInput1"
+                placeholder="Mehedi Hasan Ahad"
+                name="firstName"
+                value="Mehedi Hasan Ahad"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlTextarea1" class="form-label"
+                >Bio</label
+              >
+              <textarea
+                class="form-control"
+                id="exampleFormControlTextarea1"
+                rows="3"
+                name="bio"
+              >My bio is writting</textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Store</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+
+  <!--Update Modal -->
+  <% let currentId= 5%>
+  <div
+  class="modal fade"
+  id="updateModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="updateModalLabel"
+  aria-hidden="true"
+  >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Modal title</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form id="updateForm" action="/api/update/" method="post" enctype="multipart/form-data">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="updateName" class="form-label"
+              >Full Name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="updateName"
+              placeholder="Mehedi Hasan Ahad"
+              name="firstName"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="updateBio" class="form-label"
+              >Bio</label
+            >
+            <textarea
+              class="form-control"
+              id="updateBio"
+              rows="3"
+              name="bio"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button class="btn btn-primary">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  </div>
+  <!-- Modal -->
+
+
+  <h2>MEEN Stack CRUD</h2>
+
+  <table>
+    <tr>
+      <th>SL</th>
+      <th>Name</th>
+      <th>Biodata</th>
+      <th>Actions</th>
+    </tr>
+    <% if (data) { %>
+      <% data.forEach((item, index) => { %>
+        <tr>
+          <td><%= (index+1)%></td>
+          <td><%= item.firstName %></td>
+          <td><%= item.bio %></td>
+          <td>
+            <button 
+            class="btndark"
+            data-bs-toggle="modal"
+            data-bs-target="#updateModal"
+            onclick="setValueInModal('<%= item._id%>','<%= item.firstName %>', '<%= item.bio%>')"
+            >Edit</button>
+            <form action="/api/<%= item._id %>" method="post" style="display: inline;">
+              <button class="btndark">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <%});%>
+    <% }; %>
+  </table>
+  <script>
+    const setValueInModal = (id, name, bio) => {
+      document.getElementById('updateName').value = name;
+      document.getElementById('updateBio').innerText = bio;
+      document.getElementById('updateForm').action = `/api/update/${id}`;
+    }
+  </script>
+</body>
+<%- include('layout/footer') %>
